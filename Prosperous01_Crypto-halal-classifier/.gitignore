@@ -1,0 +1,32 @@
+# Virtual Environment
+venv/
+env/
+.venv/
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS Files
+.DS_Store
+Thumbs.db
+*.log
+
+# Model files (if large)
+models/*.pkl
+models/*.h5
+
+# Data files (if sensitive)
+# data/raw/*.csv
