@@ -1,31 +1,5 @@
-# ai-fun-2026
-Artificial intelligence - Hand-on AI and ML with Python
-
-## 1. env setup instruction
-
-1.1 create your own project folder inside this repositories as for example I do interesting and experimenting in Quant trading and integrated with AI and ML so I create folder name as "kholed-langsari_ai-quant-finance" <br>
-1.2 respect project folder structure https://github.com/drivendataorg/cookiecutter-data-science
-
-## 2. project instruction
-
-Respect/follow AI/ML/DS process as 6 steps CRISP-DM (Cross-Industry Standard Process for Data Mining)CRISP-DM or 5 steps Team Data Science Process (TDSP) or 8 steps of the model End-to-End Machine Learning Project as below:<br><br>
-2.1 Look at the big picture.<br>
-2.2 Get the data.<br>
-2.3 Explore and visualize the data to gain insights.<br>
-2.4 Prepare the data for machine learning algorithms. <br>
-2.5 Select a model and train it.<br>
-2.6 Fine-tune your model.<br>
-2.7 Present your solution.<br>
-2.8 Launch, monitor, and maintain your system.<br>
-
-## 3. project submition and presentation
-3.1. submit project detail to the given GitHub (AI-FUN-2026) <br>
-3.2. progress presentataion <br>
-3.3. final presentataion <br>
-
-
 # AI-FUN-2026
-Artificial Intelligence - Hands-On AI and ML with Python project
+Artificial Intelligence Fundamental - Hands-On AI and ML projects with Python
 
 ## 1. Environment Setup Instructions
 
