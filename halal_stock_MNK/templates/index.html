@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Halal Stock AI Analyzer</title>
+    <style>
+        body {
+            background: #0d1117;
+            color: #e6edf3;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .card {
+            background: #161b22;
+            padding: 30px;
+            border-radius: 15px;
+            width: 500px;
+            margin: auto;
+            box-shadow: 0 0 25px rgba(0,255,200,0.1);
+        }
+
+        input {
+            padding: 12px;
+            width: 70%;
+            border-radius: 8px;
+            border: none;
+            background: #0d1117;
+            color: white;
+            margin-right: 10px;
+        }
+
+        button {
+            padding: 12px 20px;
+            background: #00ffc3;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .halal {
+            color: #00ff9c;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .haram {
+            color: #ff4d4d;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .bar {
+            background: #222;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .bar-fill {
+            height: 20px;
+            background: #00ffc3;
+        }
+
+        ul {
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🧠 Halal Stock AI Analyzer</h1>
+
+    <div class="card">
+        <form method="POST">
+            <input type="text" name="ticker" placeholder="Enter ticker e.g. AAPL" required>
+            <button type="submit">Analyze</button>
+        </form>
+
+        {% if result %}
+            <h2>{{ result.ticker }}</h2>
+            <p>Sector: {{ result.sector }}</p>
+
+            {% if result.status == "HALAL" %}
+                <div class="halal">HALAL ✅</div>
+            {% else %}
+                <div class="haram">HARAM ❌</div>
+            {% endif %}
+
+            <p>AI Confidence: {{ result.confidence }}%</p>
+
+            <div class="bar">
+                <div class="bar-fill" style="width: {{ result.confidence|default(0) }}%;"></div>
+            </div>
+
+            <h3>Reasons:</h3>
+            <ul>
+                {% for r in result.reasons %}
+                    <li>{{ r }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+
+</body>
+</html>
