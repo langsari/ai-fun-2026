@@ -33,7 +33,7 @@ Initial exploratory data analysis revealed two critical insights:
 To overcome the No-Drop Policy and dimensionality issues, the data preparation phase features a core innovation before model training:
 
 ### 🌟 The Secret Sauce: Dynamic Feature Weighting
-After standardizing all 98 dimensions using `StandardScaler` (Z-score normalization), we applied **Contextual Feature Scaling**:
+After standardizing all 89 dimensions using `StandardScaler` (Z-score normalization), we applied **Contextual Feature Scaling**:
 * **Outfield Targets:** GK attributes are suppressed to a **1% (0.01)** weight.
 * **Goalkeeper Targets:** GK attributes are amplified by **200% (2.00)**, while outfield skills are suppressed to 1%.
 * **Financial Constraints:** Market value and salary weights are penalized to **20% (0.20)** to prioritize on-pitch playstyle DNA over financial status.
