@@ -1,0 +1,1 @@
+print("AI Mood Detector started")
