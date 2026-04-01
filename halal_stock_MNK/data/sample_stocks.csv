@@ -1,0 +1,4 @@
+symbol,sector,interest_income,total_income,interest_debt,total_assets
+ACD,Industrial,800000,42000000,11000000,50000000
+BANK1,Banking,5000000,30000000,20000000,40000000
+FOODX,Food,200000,38000000,9000000,45000000

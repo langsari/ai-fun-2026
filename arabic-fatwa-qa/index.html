@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>المفتي الرقمي</title>
+
+    <meta name="description"
+        content="محرك بحث فقهي ذكي يعتمد على الفتاوى، لتسهيل الوصول إلى الأحكام الشرعية الصحيحة باستخدام الذكاء الاصطناعي.">
+
+    <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow">
+    <meta name="language" content="ar">
+
+    <link rel="icon" href="/ico.png" type="image/png">
+    <link rel="apple-touch-icon" href="/ico.png">
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="المفتي الرقمي">
+    <meta property="og:title" content="المفتي الرقمي">
+    <meta property="og:description"
+        content="منصة وقفية ذكية لإحياء الفتاوى وتسهيل البحث فيها.">
+    <meta property="og:image" content="/social-cover.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="ar_AR">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="المفتي الرقمي">
+    <meta name="twitter:description" content="محرك بحث فقهي ذكي للوصول إلى الفتاوى">
+    <meta name="twitter:image" content="/social-cover.jpg">
+
+    <meta name="theme-color" content="#0f172a">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @font-face {
+            font-family: 'LyonBlack';
+            src: url('lyon-black.otf') format('opentype');
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'LyonBold';
+            src: url('lyon-bold.otf') format('opentype');
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'LyonMedium';
+            src: url('lyon-medium.otf') format('opentype');
+            font-display: swap;
+        }
+
+        [v-cloak] {
+            display: none;
+        }
+
+        body {
+            background-color: #0f172a;
+            color: #e2e8f0;
+            font-family: 'LyonMedium', serif;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+            overscroll-behavior-y: none;
+        }
+
+        h1,
+        h2,
+        h3,
+        button,
+        input {
+            font-family: 'LyonBold', serif;
+        }
+
+        .font-heavy {
+            font-family: 'LyonBlack', serif;
+        }
+
+        .app-gradient {
+            background: radial-gradient(circle at top center, #1e293b 0%, #0f172a 100%);
+        }
+
+        .gold-btn {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: #000;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        input {
+            padding-bottom: 8px;
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.25);
+            font-size: 0.95rem;
+            font-family: 'LyonMedium';
+        }
+
+        .step-line {
+            position: absolute;
+            top: 50%;
+            left: 20px;
+            right: 20px;
+            height: 2px;
+            background: #334155;
+            z-index: 0;
+            transform: translateY(-50%);
+        }
+    </style>
+</head>
+
+<body class="antialiased app-gradient min-h-screen">
+
+    <div id="app" v-cloak class="min-h-screen flex flex-col">
+
+        <nav v-if="!viewingFatwa" class="pt-8 px-6 pb-4 flex items-center gap-5 animate-in fade-in duration-500">
+            <div class="flex flex-col justify-center">
+                <h1 class="text-lg text-white leading-tight mb-1">المفتي الرقمي</h1>
+                <p class="text-xs text-slate-400 font-lyon-medium opacity-80">محرك بحث فقهي ذكي</p>
+            </div>
+        </nav>
+
+        <main v-if="!viewingFatwa" class="flex-1 w-full max-w-lg mx-auto px-6 pt-4 pb-12 flex flex-col">
+
+            <div class="text-center mb-8 animate-in fade-in duration-700">
+                <p class="font-heavy text-xl text-amber-500 leading-loose">
+                    "فَاسْأَلُوا أَهْلَ الذِّكْرِ إِن كُنتُم لَا تَعْلَمُونَ"
+                </p>
+            </div>
+
+            <div class="relative group mb-12 z-20">
+                <div
+                    class="bg-slate-900 border border-slate-700 rounded-2xl p-2 flex items-center shadow-xl transition-all focus-within:border-amber-500/50">
+                    <div class="pl-4 pr-3 text-amber-500/60"><i data-lucide="search" class="w-5 h-5"></i></div>
+                    <input type="text" v-model="query" @keyup.enter="startProcess"
+                        placeholder="اكتب سؤالك الشرعي هنا..."
+                        class="w-full bg-transparent h-12 text-lg text-white outline-none">
+                    <button @click="startProcess" :disabled="loading || !query.trim()"
+                        class="w-12 h-12 gold-btn rounded-xl flex items-center justify-center hover:opacity-90 active:scale-95 transition-all disabled:opacity-50 disabled:grayscale shadow-lg">
+                        <i :data-lucide="loading ? 'loader-2' : 'arrow-left'" :class="{'animate-spin': loading}"
+                            class="w-6 h-6 font-bold"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Loading Visual Steps (New Design) -->
+            <div v-if="loading" class="mb-12 relative px-2">
+                <!-- Background Line -->
+                <div class="step-line">
+                    <div class="h-full bg-amber-500 transition-all duration-700 ease-out shadow-[0_0_10px_rgba(245,158,11,0.5)]"
+                        :style="{ width: (activeStep / (steps.length - 1)) * 100 + '%' }"></div>
+                </div>
+
+                <div class="relative flex justify-between z-10">
+                    <div v-for="(s, i) in steps" :key="i" class="flex flex-col items-center gap-2 group">
+                        <div class="w-11 h-11 rounded-full flex items-center justify-center border-2 transition-all duration-500 bg-slate-900"
+                            :class="activeStep >= i ? 'border-amber-500 text-amber-500 shadow-[0_0_20px_rgba(245,158,11,0.3)] scale-110' : 'border-slate-700 text-slate-600'">
+                            <i :data-lucide="stepIcons[i]" class="w-5 h-5 transition-transform duration-300"
+                                :class="activeStep === i ? 'animate-pulse' : ''"></i>
+                        </div>
+                        <span
+                            class="text-[10px] font-bold transition-colors duration-300 absolute -bottom-7 w-20 text-center"
+                            :class="activeStep >= i ? 'text-amber-500' : 'text-slate-600'">{{ s }}</span>
+                    </div>
+                </div>
+                <div class="h-6"></div>
+            </div>
+
+            <div v-if="!loading && analysis" class="mb-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div class="bg-slate-800/40 border-r-4 border-amber-500 p-5 rounded-r-xl rounded-l-md">
+                    <h3 class="text-[10px] font-bold text-amber-500/70 uppercase mb-2">المقصد الشرعي</h3>
+                    <p class="text-lg text-slate-200 font-heavy leading-relaxed">"{{ analysis.intent }}"</p>
+                </div>
+            </div>
+
+            <div v-if="!loading && results.length > 0"
+                class="space-y-4 mb-12 animate-in fade-in slide-in-from-bottom-8 duration-700">
+                <div v-for="item in results" :key="item.id" @click="openFatwa(item)"
+                    class="bg-slate-800/30 hover:bg-slate-800/60 border border-white/5 p-5 rounded-2xl transition-all cursor-pointer active:scale-[0.99] group">
+                    <div class="flex justify-between items-start mb-3">
+                        <span
+                            class="text-[10px] font-bold text-amber-500/60 uppercase tracking-widest bg-amber-500/5 px-2 py-0.5 rounded">{{
+                            sourceNames[item.src] }}</span>
+                        <i data-lucide="chevron-left"
+                            class="w-4 h-4 text-slate-600 group-hover:text-amber-500 transition-colors"></i>
+                    </div>
+                    <h3
+                        class="text-lg font-bold text-slate-100 mb-2 leading-snug group-hover:text-amber-500 transition-colors">
+                        {{ item.title }}</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2 leading-relaxed font-lyon-medium opacity-80">{{
+                        item.question || item.answer }}</p>
+                </div>
+            </div>
+
+            <section class="mt-auto pt-10 border-t border-white/5 animate-in fade-in duration-1000">
+                <div class="mb-8 space-y-4">
+                    <h3 class="text-xl font-heavy text-white flex items-center gap-2">
+                        <i data-lucide="info" class="w-5 h-5 text-amber-500"></i> عن المفتي الرقمي
+                    </h3>
+                    <p class="text-slate-400 text-sm leading-7 text-justify">
+                        منصة وقفية تهدف لإحياء الفتاوي باستخدام الذكاء الاصطناعي، لتسهيل وصول
+                        الباحثين والعامة إلى الفتاوى الصحيحة.
+                    </p>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-700 p-6 rounded-3xl relative overflow-hidden shadow-2xl">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-3xl -mr-10 -mt-10">
+                    </div>
+                    <div class="relative z-10">
+                        <div class="flex items-start justify-between mb-4">
+                            <div>
+                                <h4 class="text-base font-bold text-white flex items-center gap-2">
+                                    المساهمة في الوقف
+                                    <i data-lucide="shield-check" class="w-4 h-4 text-green-500"></i>
+                                </h4>
+                                <p class="text-[10px] text-slate-400 mt-1">تغطية تكاليف الخوادم ومعالجة الذكاء الاصطناعي
+                                </p>
+                            </div>
+                        </div>
+                        <div id="paypal-button-container" class="w-full min-h-[45px]"></div>
+
+                    </div>
+
+                    <p class="text-[10px] text-slate-400 text-center mt-2">
+                        يتم الدفع عبر طرف ثالث مثل باي بال او منصة خاصة في المتاجر الموثوقة لايتم جمع بياناتك او
+                        مشاركتها ابداً يتم دفع هذه المبالغ المستلمة لتشغيل الموقع
+                    </p>
+                </div>
+
+                <div class="text-center mt-8 opacity-30">
+                    <p class="text-[10px] font-bold">تطوير وإشراف: محمد توتس <a href="https://www.instagram.com/m0hes/" target="_blank"
+                            class="hover:text-amber-500 transition-colors">(@m0hes)</a></p>
+                </div>
+            </section>
+        </main>
+
+        <section v-if="viewingFatwa"
+            class="fixed inset-0 z-[100] bg-[#0f172a] flex flex-col animate-in slide-in-from-left duration-300">
+            <div v-if="!isTelegram"
+                class="shrink-0 p-4 bg-slate-900/95 backdrop-blur-md border-b border-white/5 flex items-center gap-4 shadow-lg relative z-50">
+                <button @click="closeFatwa"
+                    class="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-500 transition-all active:scale-95 border border-white/5">
+                    <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </button>
+                <div class="flex flex-col">
+                    <span class="text-sm font-bold text-slate-200">العودة للنتائج</span>
+                    <span class="text-[10px] text-slate-500">إغلاق الفتوى الحالية</span>
+                </div>
+            </div>
+            <div id="fatwa-content" class="flex-1 overflow-y-auto no-scrollbar scroll-smooth" v-html="fatwaHtml"></div>
+        </section>
+
+    </div>
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    query: "",
+                    loading: false,
+                    results: [],
+                    analysis: null,
+                    error: null,
+                    viewingFatwa: false,
+                    activeFatwa: null,
+                    showSettings: false,
+                    ngrokUrl: "",
+                    ngrokStatus: null,
+                    activeStep: 0,
+                    steps: ["استقبال", "تحليل", "بحث TF-IDF", "AraBERT", "نتائج"],
+                    stepIcons: ["send", "brain", "file-search", "sparkles", "check-circle"],
+                    stepTimer: null,
+                    sourceNames: {
+                        fatwa: "فتوى",
+                        default: "مصدر",
+                    },
+                };
+            },
+
+            mounted() {
+                lucide.createIcons();
+                this.$nextTick(() => lucide.createIcons());
+            },
+
+            updated() {
+                this.$nextTick(() => lucide.createIcons());
+            },
+
+            methods: {
+
+                async startProcess() {
+                    if (!this.query.trim() || this.loading) return;
+                    this.loading = true;
+                    this.results = [];
+                    this.analysis = null;
+                    this.error = null;
+                    this.activeStep = 0;
+
+                    // Animate loading steps
+                    let step = 0;
+                    this.stepTimer = setInterval(() => {
+                        if (step < this.steps.length - 1) {
+                            step++;
+                            this.activeStep = step;
+                        }
+                    }, 600);
+
+                    try {
+                        const resp = await fetch("/ask", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ question: this.query, top_k: 5 }),
+                        });
+
+                        const data = await resp.json();
+                        clearInterval(this.stepTimer);
+                        this.activeStep = this.steps.length - 1;
+
+                        if (data.error) {
+                            this.error = data.error + (data.message ? " — " + data.message : "");
+                        } else {
+                            this.analysis = data.analysis || null;
+                            this.results = (data.results || []).map((r, i) => ({
+                                id: r.id || i + 1,
+                                title: r.title || r.question?.slice(0, 100) || "فتوى",
+                                question: r.question || "",
+                                answer: r.answer || "",
+                                confidence: r.confidence || "",
+                                tfidf: r.tfidf || "",
+                                bert: r.bert || "",
+                                src: r.src || "fatwa",
+                            }));
+                        }
+                    } catch (err) {
+                        clearInterval(this.stepTimer);
+                        this.error = "خطأ في الاتصال: " + err.message;
+                    } finally {
+                        this.loading = false;
+                        this.$nextTick(() => lucide.createIcons());
+                    }
+                },
+
+                openFatwa(item) {
+                    this.activeFatwa = item;
+                    this.viewingFatwa = true;
+                    this.$nextTick(() => lucide.createIcons());
+                },
+
+                closeFatwa() {
+                    this.viewingFatwa = false;
+                    this.activeFatwa = null;
+                },
+
+                async saveNgrokUrl() {
+                    if (!this.ngrokUrl.startsWith("http")) {
+                        this.ngrokStatus = "❌ URL يجب أن يبدأ بـ http";
+                        return;
+                    }
+                    try {
+                        const r = await fetch("/update_url", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ url: this.ngrokUrl }),
+                        });
+                        const d = await r.json();
+                        this.ngrokStatus = d.status === "ok"
+                            ? " تم التحديث: " + d.url
+                            : "❌ " + (d.error || "خطأ");
+                    } catch (e) {
+                        this.ngrokStatus = "❌ " + e.message;
+                    }
+                },
+
+                // ── Health check ──────────────────────────────────
+                async checkHealth() {
+                    try {
+                        const r = await fetch("/health");
+                        const d = await r.json();
+                        this.ngrokStatus = d.status === "connected"
+                            ? " متصل — corpus: " + (d.colab?.corpus_size || "?") + " فتوى"
+                            : " غير متصل";
+                    } catch (e) {
+                        this.ngrokStatus = "❌ " + e.message;
+                    }
+                },
+            }
+        }).mount("#app");
+    </script>
+
+</body>
+
+</html>

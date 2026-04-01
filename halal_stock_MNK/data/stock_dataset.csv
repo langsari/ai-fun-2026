@@ -1,0 +1,31 @@
+stock_name,interest_ratio,debt_ratio,non_halal_ratio,label
+JPMorgan Chase (JPM),0.65,0.92,0.45,Haram
+Bank of America (BAC),0.62,0.90,0.42,Haram
+HSBC Holdings (HSBA),0.60,0.89,0.43,Haram
+KBANK (Thai),0.55,0.85,0.38,Haram
+SCB X (Thai),0.58,0.88,0.40,Haram
+Anheuser-Busch InBev (BUD),0.02,0.45,0.98,Haram
+Philip Morris (PM),0.03,0.55,1.00,Haram
+Las Vegas Sands (LVS),0.04,0.60,0.95,Haram
+Heineken (HEINY),0.02,0.40,0.97,Haram
+Wynn Resorts (WYNN),0.05,0.75,0.90,Haram
+Microsoft (MSFT),0.01,0.12,0.00,Halal
+Apple (AAPL),0.008,0.15,0.00,Halal
+Alphabet (GOOGL),0.005,0.08,0.01,Halal
+Johnson & Johnson (JNJ),0.012,0.20,0.00,Halal
+Procter & Gamble (PG),0.015,0.22,0.00,Halal
+Al Rajhi Bank (RJHI),0.008,0.10,0.00,Halal
+Dubai Islamic Bank (DIB),0.01,0.12,0.00,Halal
+Qatar Islamic Bank (QIBK),0.009,0.11,0.00,Halal
+Kuwait Finance House (KFH),0.011,0.13,0.00,Halal
+NVIDIA (NVDA),0.004,0.05,0.00,Halal
+Netflix (NFLX),0.02,0.45,0.04,Doubtful
+Walt Disney (DIS),0.01,0.38,0.03,Doubtful
+McDonald's (MCD),0.02,0.98,0.02,Doubtful
+Starbucks (SBUX),0.01,0.95,0.01,Doubtful
+Amazon (AMZN),0.015,0.35,0.02,Doubtful
+Delta Air Lines (DAL),0.04,0.85,0.01,Doubtful
+AT&T (T),0.05,0.48,0.01,Doubtful
+Verizon (VZ),0.04,0.52,0.01,Doubtful
+Coca-Cola (KO),0.018,0.32,0.00,Doubtful
+Ford Motor (F),0.07,0.82,0.01,Doubtful
