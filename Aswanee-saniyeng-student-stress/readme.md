@@ -6,9 +6,6 @@
 
 ---
 
-## 📌 About This Project
-This project was created for the **AI-FUN-2026** course.
-
 The goal of this project is to build a machine learning system that can predict a student’s **stress level** based on their daily habits, academic pressure, and mental condition.
 
 The system predicts stress into 3 levels:
@@ -253,7 +250,6 @@ This project can be improved by:
 
 **Name:** Aswanee Saniyeng
 **Project:** AI System for Student Stress Level Assessment
-**Course:** AI-FUN-2026
 
 ````
 
