@@ -117,7 +117,7 @@ The AI system can effectively classify workout readiness based on simple health 
 
 ---
 
-## 🚀 Deployment
+##  Deployment
 
 Currently, the system runs in Jupyter Notebook.
 
