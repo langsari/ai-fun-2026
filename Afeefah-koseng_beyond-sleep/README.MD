@@ -164,7 +164,7 @@ Features:
 The model was evaluated using accuracy score.
 
 Example:
-Model Accuracy: ~0.80 - 0.90
+Model Accuracy: ~0.80 - 0.95
 
 ---
 
