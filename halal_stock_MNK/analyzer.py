@@ -1,4 +1,5 @@
 # analyzer.py
+<<<<<<< HEAD
 
 from shariah_rules import check_sector, check_financial_ratios
 from ml_predictor import ai_predict
@@ -49,12 +50,36 @@ def analyze(stock):
     # =========================
     # ใช้ AI เพิ่ม (ถ้าไม่ตกกฎ)
     # =========================
+=======
+from shariah_rules import check_shariah
+from ml_predictor import ai_predict
+
+def analyze(stock):
+    status, reasons = check_shariah(stock)
+
+    # ถ้าฮารอมชัด ไม่ต้องใช้ AI
+    if status == "Haram":
+        return {
+            "symbol": stock["symbol"],
+            "status": status,
+            "reasons": reasons,
+            "confidence": 1.0
+        }
+
+    # ถ้า Halal หรือ Doubtful → ให้ AI ประเมินเพิ่ม
+>>>>>>> ac81be44a1a42f92e104a3a72a4f72d908e48d58
     ai_status, confidence = ai_predict(stock)
 
     return {
         "symbol": stock["symbol"],
+<<<<<<< HEAD
         "status": ai_status.upper(),
         "confidence": confidence,
         "failed_reasons": failed_reasons,
         "passed_reasons": passed_reasons
+=======
+        "status": ai_status,
+        "reasons": reasons,
+        "confidence": confidence
+>>>>>>> ac81be44a1a42f92e104a3a72a4f72d908e48d58
     }
