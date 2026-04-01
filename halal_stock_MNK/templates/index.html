@@ -3,15 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <title>Halal Stock AI Analyzer</title>
+<<<<<<< HEAD
+
+    <style>
+        body {
+            background: radial-gradient(circle at top, #0d1117, #020409);
+            color: #e6edf3;
+            font-family: "Segoe UI", Arial, sans-serif;
+=======
     <style>
         body {
             background: #0d1117;
             color: #e6edf3;
             font-family: Arial, sans-serif;
+>>>>>>> ac81be44a1a42f92e104a3a72a4f72d908e48d58
             text-align: center;
             padding: 40px;
         }
 
+<<<<<<< HEAD
+        h1 {
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: #161b22;
+            padding: 30px;
+            border-radius: 18px;
+            width: 550px;
+            margin: auto;
+            box-shadow: 0 0 30px rgba(0,255,200,0.08);
+=======
         .card {
             background: #161b22;
             padding: 30px;
@@ -19,12 +41,17 @@
             width: 500px;
             margin: auto;
             box-shadow: 0 0 25px rgba(0,255,200,0.1);
+>>>>>>> ac81be44a1a42f92e104a3a72a4f72d908e48d58
         }
 
         input {
             padding: 12px;
             width: 70%;
+<<<<<<< HEAD
+            border-radius: 10px;
+=======
             border-radius: 8px;
+>>>>>>> ac81be44a1a42f92e104a3a72a4f72d908e48d58
             border: none;
             background: #0d1117;
             color: white;
@@ -33,9 +60,15 @@
 
         button {
             padding: 12px 20px;
+<<<<<<< HEAD
+            background: linear-gradient(90deg, #00ffc3, #00ffa2);
+            border: none;
+            border-radius: 10px;
+=======
             background: #00ffc3;
             border: none;
             border-radius: 8px;
+>>>>>>> ac81be44a1a42f92e104a3a72a4f72d908e48d58
             font-weight: bold;
             cursor: pointer;
         }
@@ -59,6 +92,61 @@
             margin: 15px 0;
         }
 
+<<<<<<< HEAD
+        .bar-fill-halal {
+            height: 20px;
+            background: linear-gradient(90deg, #00ff9c, #00ffc3);
+        }
+
+        .bar-fill-haram {
+            height: 20px;
+            background: linear-gradient(90deg, #ff4d4d, #ff0000);
+        }
+
+        .reasons {
+            text-align: left;
+            margin-top: 20px;
+        }
+
+        .passed {
+            color: #00ff9c;
+        }
+
+        .failed {
+            color: #ff4d4d;
+        }
+
+        .error {
+            color: #ff4d4d;
+            margin-top: 15px;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        th, td {
+            padding: 8px;
+            border-bottom: 1px solid #333;
+        }
+
+        th {
+            background: #222;
+        }
+
+        .halal-text { color: #00ff9c; }
+        .haram-text { color: #ff4d4d; }
+        .doubt-text { color: #ffaa00; }
+
+        hr {
+            border: 0;
+            height: 1px;
+            background: #222;
+            margin: 20px 0;
+=======
         .bar-fill {
             height: 20px;
             background: #00ffc3;
@@ -66,11 +154,111 @@
 
         ul {
             text-align: left;
+>>>>>>> ac81be44a1a42f92e104a3a72a4f72d908e48d58
         }
     </style>
 </head>
 <body>
 
+<<<<<<< HEAD
+<h1>🧠 Halal Stock AI Analyzer</h1>
+
+<div class="card">
+
+    <!-- FORM -->
+    <form method="POST">
+        <input type="text" name="ticker" placeholder="Enter ticker e.g. AAPL" required>
+        <button type="submit">Analyze</button>
+    </form>
+
+    <!-- ERROR -->
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
+
+    <!-- RESULT -->
+    {% if result %}
+        <hr>
+
+        <h2>{{ result.ticker }}</h2>
+        <p>Sector: {{ result.sector }}</p>
+
+        {% if result.status == "HALAL" %}
+            <div class="halal">HALAL ✅</div>
+            <div class="bar">
+                <div class="bar-fill-halal" style="width: {{ result.confidence }}%"></div>
+            </div>
+        {% else %}
+            <div class="haram">HARAM ❌</div>
+            <div class="bar">
+                <div class="bar-fill-haram" style="width: {{ result.confidence }}%"></div>
+            </div>
+        {% endif %}
+
+        <p>AI Confidence: {{ result.confidence }}%</p>
+
+        <!-- REASONS -->
+        <div class="reasons">
+
+            {% if result.failed_reasons %}
+                <h3 class="failed">❌ Failed</h3>
+                <ul>
+                    {% for r in result.failed_reasons %}
+                        <li class="failed">{{ r }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            {% if result.passed_reasons %}
+                <h3 class="passed">✅ Passed</h3>
+                <ul>
+                    {% for r in result.passed_reasons %}
+                        <li class="passed">{{ r }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+        </div>
+    {% endif %}
+
+    <!-- DATASET TABLE -->
+    {% if dataset %}
+        <hr>
+        <h3>📊 Stock Dataset</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Interest</th>
+                    <th>Debt</th>
+                    <th>Non-Halal</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in dataset %}
+                <tr>
+                    <td>{{ s.stock_name }}</td>
+                    <td>{{ s.interest_ratio }}</td>
+                    <td>{{ s.debt_ratio }}</td>
+                    <td>{{ s.non_halal_ratio }}</td>
+
+                    {% if s.label == "Halal" %}
+                        <td class="halal-text">Halal</td>
+                    {% elif s.label == "Haram" %}
+                        <td class="haram-text">Haram</td>
+                    {% else %}
+                        <td class="doubt-text">Doubtful</td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+</div>
+=======
     <h1>🧠 Halal Stock AI Analyzer</h1>
 
     <div class="card">
@@ -103,6 +291,7 @@
             </ul>
         {% endif %}
     </div>
+>>>>>>> ac81be44a1a42f92e104a3a72a4f72d908e48d58
 
 </body>
 </html>

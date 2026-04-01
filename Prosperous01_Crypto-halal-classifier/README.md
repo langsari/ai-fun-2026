@@ -73,6 +73,37 @@ Implemented and compared **7 different machine learning algorithms**:
 - **ROC AUC Score** - Quality of probabilistic predictions
 - **Confusion Matrix** - Detailed prediction breakdown
 
+<<<<<<< HEAD
+=======
+## Advanced Improvements
+
+### 1. Interactive Jupyter Notebook Workflow
+Created a comprehensive Jupyter notebook (`notebooks/crypto_classifier_workflow.ipynb`) that provides:
+- Step-by-step ML workflow visualization
+- Interactive data exploration
+- Real-time model training and evaluation
+- Educational presentation format
+
+### 2. Hyperparameter Optimization with Grid Search
+Implemented comprehensive hyperparameter tuning using GridSearchCV:
+- **Random Forest**: Tested 576 parameter combinations
+- **Gradient Boosting**: Tested 864 parameter combinations
+- **Results**: Achieved 100% accuracy on test set with optimized Gradient Boosting
+- **Improvement**: Tuned models show consistent 98.67% cross-validation scores
+- **Best Parameters Discovered**:
+  - Learning rate: 0.01
+  - Max depth: 3
+  - N_estimators: 50
+  - Subsample: 0.8
+
+### 3. Model Comparison
+The project now includes:
+- 7 traditional ML algorithms with default parameters
+- 2 optimized models with grid-searched hyperparameters
+- Comprehensive performance metrics for each model
+- Visual comparisons of accuracy, error rates, and F1-scores
+
+>>>>>>> ac81be44a1a42f92e104a3a72a4f72d908e48d58
 ## Results
 
 ### Model Performance Comparison

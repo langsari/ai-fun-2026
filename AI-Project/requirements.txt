@@ -1,4 +1,24 @@
-ultralytics
-opencv-python
-easyocr
-numpy
+# ============================================================
+#  requirements.txt — AI Model Comparison Project
+#  Compares YOLOv8, Faster R-CNN, and SSD300 on 100 images
+# ============================================================
+ 
+# --- Core Deep Learning ---
+torch>=2.0.0
+torchvision>=0.15.0
+ 
+# --- YOLOv8 ---
+ultralytics>=8.0.0
+ 
+# --- Dataset Download ---
+roboflow>=1.1.0
+ 
+# --- Image Processing ---
+opencv-python-headless>=4.7.0
+ 
+# --- Data Analysis ---
+numpy>=1.24.0
+pandas>=2.0.0
+ 
+# --- Visualization ---
+matplotlib>=3.7.0
