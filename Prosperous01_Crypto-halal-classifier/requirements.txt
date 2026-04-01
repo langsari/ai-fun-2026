@@ -2,4 +2,11 @@ pandas==3.0.1
 numpy==2.4.2
 scikit-learn==1.8.0
 matplotlib==3.10.8
+<<<<<<< HEAD
 seaborn==0.13.2
+=======
+seaborn==0.13.2
+jupyter>=1.0.0
+ipykernel>=6.0.0
+joblib>=1.3.0
+>>>>>>> ac81be44a1a42f92e104a3a72a4f72d908e48d58
