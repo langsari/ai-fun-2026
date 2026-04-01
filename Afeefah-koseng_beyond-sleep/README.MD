@@ -139,7 +139,7 @@ Afeefah-koseng_beyond-sleep/
 │   └── ocean_wave.mp3
 │
 ├── insomnia_ai_project.ipynb
-└── README.md
+└── README.MD
 ```
 
 ---
