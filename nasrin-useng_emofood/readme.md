@@ -182,4 +182,3 @@ pip install pandas matplotlib scikit-learn
 
 ## Author
 **Name:** Nasrin Useng
->>>>>>> Stashed changes
