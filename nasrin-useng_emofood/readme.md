@@ -1,6 +1,3 @@
-<<<<<<< Updated upstream
-emofood najaaa
-=======
 # 🍜 Emotional Food AI
 
 A Machine Learning project that recommends food based on a person's **emotion** and the current **weather condition**.
