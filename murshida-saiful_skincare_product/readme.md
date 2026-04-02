@@ -83,7 +83,6 @@ We implement a **Content-Based Recommendation System** using:
 ## Dataset
 
 * Source: Sephora Dataset
-* Sample Size: **100 products**
 * Features used:
 
   * `product_name`
