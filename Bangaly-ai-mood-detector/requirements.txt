@@ -1,0 +1,30 @@
+# ============================================================
+#  requirements.txt — AI Mood Detector Project
+#  Real-Time Facial Emotion Recognition using FER + OpenCV
+# ============================================================
+
+# --- Core Deep Learning ---
+tensorflow>=2.20.0
+tf-keras>=2.20.0
+
+# --- Emotion Recognition ---
+fer==22.5.1
+
+# --- Face Detection ---
+mtcnn>=0.1.1
+
+# --- Image Processing ---
+opencv-python>=4.7.0
+
+# --- Data Handling ---
+numpy>=1.24.0
+
+# --- Visualization ---
+matplotlib>=3.7.0
+
+# --- System Utilities (Built-in, no install needed) ---
+# collections
+# threading
+# datetime
+# os
+# time

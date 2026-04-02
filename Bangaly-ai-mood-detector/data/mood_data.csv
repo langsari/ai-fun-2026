@@ -1,0 +1,51 @@
+user_id,timestamp,text_input,mood_label,intensity,location,activity
+1,2026-04-02 08:15,Feeling very motivated to start my work day,happy,9,Bangkok,working
+2,2026-04-02 08:30,Still tired from yesterday's late night,tired,6,Bangkok,commuting
+3,2026-04-02 09:00,Had a disagreement with a colleague,angry,7,Bangkok,working
+4,2026-04-02 09:30,Feeling a bit down after reading the news,sad,5,Bangkok,reading
+5,2026-04-02 10:00,Excited about the new project assigned,excited,8,Bangkok,working
+6,2026-04-02 10:15,Not sure what to do with the current task,neutral,4,Bangkok,working
+7,2026-04-02 10:45,Anxious about the upcoming presentation,anxious,7,Bangkok,preparing
+8,2026-04-02 11:00,Feeling accomplished after finishing a report,happy,8,Bangkok,working
+9,2026-04-02 11:30,Frustrated with slow internet connection,angry,6,Bangkok,working
+10,2026-04-02 12:00,Feeling calm during my lunch break,neutral,5,Bangkok,eating
+11,2026-04-02 12:30,Still anxious about the meeting this afternoon,anxious,6,Bangkok,preparing
+12,2026-04-02 13:00,Happy with my team's progress today,happy,9,Bangkok,working
+13,2026-04-02 13:30,Feeling stressed due to multiple deadlines,stressed,8,Bangkok,working
+14,2026-04-02 14:00,Enjoying a quiet moment of reflection,neutral,5,Bangkok,resting
+15,2026-04-02 14:30,Tired from continuous meetings,tired,7,Bangkok,working
+16,2026-04-02 15:00,Excited to start learning a new skill,excited,8,Bangkok,studying
+17,2026-04-02 15:30,Feeling sad about missing an opportunity,sad,6,Bangkok,thinking
+18,2026-04-02 16:00,Happy to receive positive feedback,happy,9,Bangkok,working
+19,2026-04-02 16:30,Anxious about upcoming evaluation,anxious,7,Bangkok,preparing
+20,2026-04-02 17:00,Feeling neutral, nothing much to report,neutral,5,Bangkok,resting
+21,2026-04-02 17:15,Motivated to complete the remaining tasks,happy,8,Bangkok,working
+22,2026-04-02 17:30,Feeling exhausted after a long day,tired,7,Bangkok,resting
+23,2026-04-02 18:00,Disappointed by the results of the report,sad,6,Bangkok,reading
+24,2026-04-02 18:30,Excited to meet friends later,excited,8,Bangkok,preparing
+25,2026-04-02 19:00,Neutral about today's events,neutral,5,Bangkok,resting
+26,2026-04-02 19:30,Angry about traffic delays,angry,6,Bangkok,commuting
+27,2026-04-02 20:00,Feeling happy after finishing an assignment,happy,9,Bangkok,working
+28,2026-04-02 20:30,Anxious about tomorrow's presentation,anxious,7,Bangkok,preparing
+29,2026-04-02 21:00,Stressed from multiple pending tasks,stressed,8,Bangkok,working
+30,2026-04-02 21:30,Tired but satisfied with progress,tired,7,Bangkok,resting
+31,2026-04-02 22:00,Excited to learn new coding techniques,excited,8,Bangkok,studying
+32,2026-04-02 22:30,Sad about missing a call from family,sad,6,Bangkok,thinking
+33,2026-04-02 23:00,Feeling neutral before bedtime,neutral,5,Bangkok,resting
+34,2026-04-02 23:30,Happy with the day's achievements,happy,9,Bangkok,resting
+35,2026-04-03 00:00,Anxious about upcoming deadlines,anxious,7,Bangkok,preparing
+36,2026-04-03 00:30,Tired after continuous work,tired,8,Bangkok,resting
+37,2026-04-03 01:00,Feeling stressed due to errors in report,stressed,8,Bangkok,working
+38,2026-04-03 01:30,Excited for tomorrow's meeting,excited,8,Bangkok,preparing
+39,2026-04-03 02:00,Neutral mood, no particular feeling,neutral,5,Bangkok,resting
+40,2026-04-03 02:30,Sad about incomplete tasks,sad,6,Bangkok,working
+41,2026-04-03 03:00,Happy to receive recognition,happy,9,Bangkok,working
+42,2026-04-03 03:30,Angry about delays in project,angry,7,Bangkok,working
+43,2026-04-03 04:00,Feeling neutral, nothing significant,neutral,5,Bangkok,resting
+44,2026-04-03 04:30,Excited about learning opportunities,excited,8,Bangkok,studying
+45,2026-04-03 05:00,Tired but content with progress,tired,7,Bangkok,resting
+46,2026-04-03 05:30,Anxious about the day's schedule,anxious,7,Bangkok,preparing
+47,2026-04-03 06:00,Sad about yesterday's outcomes,sad,6,Bangkok,thinking
+48,2026-04-03 06:30,Happy to start a new day,happy,9,Bangkok,working
+49,2026-04-03 07:00,Feeling stressed by workload,stressed,8,Bangkok,working
+50,2026-04-03 07:30,Neutral about current events,neutral,5,Bangkok,resting
