@@ -66,7 +66,7 @@ We implement a **Content-Based Recommendation System** using:
 
 5. **Filtering**
 
-   * Budget filtering (THB → USD conversion)
+   * Budget filtering (USD → THB conversion)
    * Skin type filtering
 
 6. **Modeling**
