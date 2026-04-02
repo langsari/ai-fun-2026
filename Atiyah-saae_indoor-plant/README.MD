@@ -1,4 +1,3 @@
-plant plants in the dormitory
 # Indoor Plant Growing Recommendation AI
 
 This project helps users grow plants indoors or in small spaces such as dorm rooms or apartments.
@@ -39,3 +38,25 @@ The dataset contains information about plants including:
 ## Goal of the Project
 
 The goal of this project is to create a simple AI system that helps beginners grow plants easily, especially in small indoor spaces.
+
+## How It Works
+
+The system uses a simple rule-based scoring method to match plant requirements with the user's room conditions.
+
+It evaluates:
+- Sunlight compatibility
+- Space compatibility
+
+Each factor is given a score, and the total score determines how suitable the plant is for the user's room.
+
+## Limitations
+
+- The dataset is small and limited to basic plant types
+- The system uses rule-based logic instead of advanced machine learning models
+- Recommendations may not cover all real-world conditions
+
+## Future Improvements
+
+- Use machine learning models for better predictions
+- Expand the dataset with more plant types
+- Develop a graphical user interface (GUI)
