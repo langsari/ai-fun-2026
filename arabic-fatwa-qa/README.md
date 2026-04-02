@@ -1,6 +1,6 @@
-# 🕌 Islamic Fatwa Hybrid Search
+# Islamic Fatwa Hybrid Search — HOML End-to-End
 
-> **Arabic fatwa retrieval using TF-IDF + AraBERT — fine-tuned end-to-end in Google Colab with a live Flask + ngrok UI**
+> Arabic fatwa retrieval using DeepSeek + AraBERT — end-to-end in Google Colab with a laptop Flask UI
 
 ![Python](https://img.shields.io/badge/Python-3.10-blue?logo=python)
 ![Colab](https://img.shields.io/badge/Google%20Colab-GPU%20T4-orange?logo=googlecolab)
@@ -9,341 +9,279 @@
 
 ---
 
-## 📌 What This Project Does
+## What This Project Does
 
-This project builds a **semantic search engine** for Islamic fatwas (religious rulings) written in **Arabic**. You type a question in Arabic, and the system retrieves the most relevant fatwas from a large corpus — ranked by a combination of keyword matching (TF-IDF) and deep language understanding (AraBERT).
+This project builds a semantic search engine for Arabic Islamic fatwas using a hybrid of DeepSeek-R1-Distill-Qwen-1.5B and AraBERT embeddings. [file:1] You ask a question in Arabic, and the system ranks relevant fatwas from large Kaggle corpora by a weighted cosine similarity of both models. [file:1]
 
-The full pipeline goes from raw Kaggle data → Arabic text cleaning → model training → evaluation → a live web UI accessible from your laptop.
+Inspired by the end-to-end pipeline style from “Hands-On Machine Learning with Scikit-Learn, Keras & TensorFlow” (HOML), the notebook goes from raw Kaggle CSVs → Arabic cleaning → hybrid embedding index → MRR@10 evaluation → a live API served from Colab and a local Flask UI on your laptop. [file:1]
 
 ---
 
-## 🗂️ Project Structure
+## Project Structure
 
-```
+```text
 fatwa-hybrid-search/
 │
-├── fatwa_search.ipynb          # Main notebook (run in Google Colab)
-├── laptop_server.py            # Auto-generated Flask UI for your laptop
+├── fatwa_search_Latest.ipynb   # Main Colab notebook (HOML-style pipeline)
+├── laptop_server.py            # Flask UI that talks to Colab API
 │
 ├── data/
 │   ├── raw/                    # Downloaded Kaggle CSVs
 │   └── processed/
-│       ├── islamweb_train.csv  # Cleaned training split
-│       └── islamweb_test.csv   # Held-out evaluation split
+│       ├── <dataset>_train.csv # Cleaned training split
+│       └── <dataset>_test.csv  # Held-out evaluation split
 │
 ├── models/
-│   ├── tfidf/{dataset}/
-│   │   ├── q_vec.pkl           # Fitted question TF-IDF vectorizer
-│   │   ├── dv.pkl              # Fitted document TF-IDF vectorizer
-│   │   ├── q_mat.npz           # Sparse question matrix
-│   │   └── d_mat.npz           # Sparse document matrix
-│   └── bert/{dataset}/
-│       ├── embeddings.npy      # Pre-computed AraBERT embeddings
-│       └── finetuned/          # Fine-tuned AraBERT model weights
+│   ├── deepseek/<dataset>/
+│   │   └── embeddings_baseline.npy    # DeepSeek embeddings (frozen)
+│   └── bert/<dataset>/
+│       ├── embeddings_baseline.npy    # AraBERT baseline embeddings
+│       └── embeddings_finetuned.npy   # AraBERT fine-tuned embeddings
 │
 ├── reports/figures/
-│   ├── eda_islamweb.png        # EDA histograms
-│   └── mrr_islamweb.png        # MRR@10 bar chart
+│   ├── eda_<dataset>.png       # Length histograms
+│   └── mrr_<dataset>.png       # Baseline vs fine-tuned MRR@10
 │
 └── templates/
-    └── index.html              # Auto-generated web UI template
+    └── index.html              # Simple Arabic search UI
 ```
+[file:1]
+
+Authors: Mohammed Yousef Salem, Tariq Saleh Alkindi. [file:1]
 
 ---
 
-## 📦 Datasets
+## Datasets
 
-Three Kaggle datasets are supported. Switch between them by changing one variable.
+Three Kaggle datasets are supported via a small registry in the notebook. [file:1]
 
-| Key | Kaggle Dataset | Size | Columns |
-|---|---|---|---|
-| `islamweb` *(default)* | `abdallahelsaadany/fatawa` | ~83K rows | `title`, `ques`, `ans` |
-| `50k_mixed` | `hazemmosalah/50k-islamic-fatwa-q-and-a-dataset-arabic` | ~51K rows | `question`, `answer` |
-| `binbaz` | `a5medashraf/bin-baz-fatwas-dataset` | ~7K rows | `Questions`, `Answers` |
+| Key         | Kaggle Dataset                                          | Size     | Columns                     |
+|------------|----------------------------------------------------------|----------|-----------------------------|
+| `islamweb` | `abdallahelsaadany/fatawa`                              | ~83K     | `title`, `ques`, `ans`      |
+| `50k_mixed`| `hazemmosalah/50k-islamic-fatwa-q-and-a-dataset-arabic` | ~51K     | `question`, `answer`        |
+| `binbaz`   | `a5medashraf/bin-baz-fatwas-dataset`                    | ~7K      | `Questions`, `Answers`      |
+[file:1]
 
-**To switch datasets**, just change one line at the top of the notebook:
+To switch datasets, change one line and re-run:
+
 ```python
-ACTIVE_DATASET = "islamweb"   # change to "50k_mixed" or "binbaz"
+ACTIVE_DATASET = "islamweb"  # or "50k_mixed" or "binbaz"
 ```
-Everything downstream (cleaning, training, evaluation, UI) updates automatically.
+[file:1]
+
+All downstream steps (cleaning, sampling, embeddings, MRR, UI) adapt automatically. [file:1]
 
 ---
 
-## 🔬 EDA — Data Distribution (IslamWeb ~83K)
+## EDA — Data Distribution (IslamWeb ~83K)
 
-Before training, the notebook runs an Exploratory Data Analysis on the raw dataset.
+On IslamWeb, basic EDA over question/answer lengths shows: [file:1]
 
-| Metric | Questions | Answers |
-|---|---|---|
-| Median Character Length | 247 chars | 880 chars |
-| Median Word Count | 47 words | 163 words |
+| Metric                  | Questions | Answers |
+|-------------------------|----------:|--------:|
+| Median characters       |     247   |   880   |
+| Median words            |      47   |   163   |
+[file:1]
 
-Key observations:
-- Questions are short and focused (~47 words median)
-- Answers are significantly longer (~163 words median), providing rich context for retrieval
-- Both distributions have a long right tail — some entries are very long (capped at 500 chars / 2000 chars in plots for readability)
-- Large spikes at the clip boundaries indicate a meaningful number of truncated-length entries
+Key points:
+
+- Questions are relatively short and focused; answers are much longer and richer. [file:1]  
+- Both have long right tails, with some answers exceeding 5K words. [file:1]  
+- Plots are saved to `reports/figures/eda_<dataset>.png`. [file:1]
 
 ---
 
-## ⚙️ Pipeline Overview
+## Pipeline Overview
 
-```
-Raw CSV (Kaggle)
+The notebook follows a HOML-style end-to-end ML workflow: data, EDA, features, model, evaluation, serving. [file:1]
+
+```text
+Raw Kaggle CSV
       │
       ▼
- ArabicCleaner          ← strips tashkeel, tatweel, non-Arabic chars
+ArabicCleaner        ← strip tashkeel, tatweel, non-Arabic chars
       │
       ▼
- DFCleaner              ← builds enriched "doc" field: title + question×3 + answer
+DFCleaner           ← build doc field from question / answer / title
       │
       ▼
- Train / Test Split     ← 90% train | 10% test | seed=42 | NO leakage
+Train / Test Split  ← sample_n, test_size, seed, min lengths
       │
-      ├──────────────────────────────┐
-      ▼                              ▼
- TF-IDF (2 vectorizers)       AraBERT Embeddings
- Q-vectorizer  (20K features)  aubmindlab/bert-base-arabertv02
- Doc-vectorizer (15K features)  batch_size=128
- n-grams: (1,4)
-      │                              │
-      └──────────┬───────────────────┘
-                 ▼
-          Hybrid Search Engine
-          score = 0.5 × TF-IDF + 0.5 × BERT  (both min-max normalised)
-                 │
-                 ▼
-         MRR@10 Evaluation
-                 │
-                 ▼
-         Fine-Tune AraBERT (MNRL)
-         → Re-evaluate MRR@10
-                 │
-                 ▼
-         Flask API (Colab) + ngrok tunnel
-         + Laptop Flask UI
+      ▼
+Compute embeddings (DeepSeek, AraBERT)
+      │
+      ▼
+Hybrid search engine  (DeepSeek + AraBERT cosine)
+      │
+      ▼
+MRR@10 evaluation  (anti-leakage: train index, test queries)
+      │
+      ▼
+Colab Flask API + ngrok + laptop Flask UI
 ```
+
+Core components:
+
+- `ArabicCleaner`: removes diacritics, tatweel, and non-Arabic Unicode range using `pyarabic`. [file:1]  
+- `DFCleaner`: builds cleaned columns and filters out very short questions/answers; saves processed train/test CSVs. [file:1]  
+- `HybridSearchEngine`: wraps precomputed DeepSeek and AraBERT embeddings and returns top-k results with scores. [file:1]
 
 ---
 
-## 🧠 Architecture Details
+## Hybrid Architecture
 
-### Text Preprocessing
-The `ArabicCleaner` transformer (scikit-learn compatible) does three things:
-1. **Strips tashkeel** (Arabic diacritics) using `pyarabic`
-2. **Strips tatweel** (elongation characters)
-3. **Removes non-Arabic characters** (keeps only Unicode Arabic range `\u0600–\u06FF`)
+### Models
 
-The `DFCleaner` then builds a weighted `doc` field:
-```
-doc = title + (question × 3) + answer
-```
-This gives question tokens 3× more weight in TF-IDF scoring, which improves retrieval accuracy.
+- DeepSeek encoder: `deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B` (frozen, used as a sentence encoder). [file:1]  
+- AraBERT encoder: `aubmindlab/bert-base-arabertv02` via `sentence-transformers`. [file:1]
 
-### Hybrid Search Score
-For any query `q`:
-```
-tfidf_score = 0.25 × cosine(q, Q-matrix) + 0.75 × cosine(q, Doc-matrix)
-bert_score  = cosine(encode(q), embeddings)
-final_score = 0.50 × normalize(tfidf_score) + 0.50 × normalize(bert_score)
-```
-Both scores are **min-max normalised** before combining to ensure equal contribution.
+The encoder class for DeepSeek tokenizes with `AutoTokenizer` and averages token embeddings over the attention mask, in batches respecting a `ft_max_length` cap for Colab GPU. [file:1]
 
-### AraBERT Fine-Tuning
-The model is fine-tuned using **Multiple Negatives Ranking Loss (MNRL)** from `sentence-transformers`:
-- Training pairs: `(question_clean, answer_clean)` — treating each answer as the positive for its question
-- 2,000 training pairs sampled from `df_train`
-- 1 epoch, batch size 16, 10% warmup steps
-- **No data from `df_test` is ever used during training** (strict anti-leakage)
+### Search Engine
+
+Each fatwa question is embedded twice (DeepSeek and AraBERT) on a sampled corpus (`sample_n`, default 4000). [file:1]
+
+At query time:
+
+1. Encode query with DeepSeek and AraBERT.  
+2. Compute cosine similarity against stored question embeddings for each model.  
+3. Combine similarities with configurable weights: `hybrid_ara_weight` and `hybrid_deepseek_weight` (default 0.5 / 0.5). [file:1]  
+4. Return top-k results with question, answer, and a `confidence` score. [file:1]
+
+MRR@10 is computed on a held-out test subset by using a simple “answer prefix” mapping as ground truth and averaging reciprocal ranks over random samples. [file:1]
 
 ---
 
-## 📊 Results — MRR@10
+## Configuration
 
-The model is evaluated using **Mean Reciprocal Rank @ 10** on the held-out test set (500 random samples).
+All important knobs live in a `CFG` dictionary in the notebook. [file:1]
 
-| Model | MRR@10 |
-|---|---|
-| Baseline (pre-trained AraBERT) | **0.0192** |
-| Fine-Tuned AraBERT (MNRL) | **0.0197** |
-| Δ Improvement | **+0.0005 ✅** |
+| Parameter            | Default                                       | Meaning                       |
+|----------------------|-----------------------------------------------|-------------------------------|
+| `sample_n`           | 4000                                          | Rows used for embeddings      |
+| `test_size`          | 0.10                                          | Test fraction                 |
+| `seed`               | 42                                            | Random seed                   |
+| `min_q`, `min_a`     | 5, 10                                         | Min lengths (chars)           |
+| `deepseek_model`     | `deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B`   | DeepSeek model ID             |
+| `arabert_model`      | `aubmindlab/bert-base-arabertv02`             | AraBERT model ID              |
+| `hybrid_ara_weight`  | 0.5                                           | Weight on AraBERT cosine      |
+| `hybrid_deepseek_weight` | 0.5                                      | Weight on DeepSeek cosine     |
+| `deepseek_batch`     | 1                                             | DeepSeek batch size (T4-safe) |
+| `arabert_batch`      | 32                                            | AraBERT batch size            |
+| `ft_epochs`          | 1                                             | Fine-tuning epochs            |
+| `ft_batch`           | 16                                            | FT batch size                 |
+| `ft_learning_rate`   | 2e-5                                          | FT learning rate              |
+| `warmup`             | 0.10                                          | Warmup ratio                  |
+| `ft_n`               | 900                                           | Pairs for AraBERT FT          |
+| `ft_max_length`      | 512                                           | Max tokens for FT             |
+| `top_k`              | 3                                             | Results per query             |
+| `mrr_k`              | 10                                            | Cutoff for MRR@K              |
+| `mrr_n`              | 300                                           | Eval sample size              |
+[file:1]
 
-> **What is MRR@10?** For each test question, we check if the correct answer appears in the top-10 results. If it ranks 1st, score = 1. If 2nd, score = 0.5. If 3rd, score = 0.33, etc. MRR is the average across all test questions. A higher score means the right answer appears higher in results.
-
-> **Why is MRR low?** The corpus contains ~13,500 training fatwas. When a test question has an exact match in the index via only 80-character answer prefix lookup, MRR can be low because many questions have semantically similar but not identical fatwas. This is a known challenge in large-scale Arabic IR and reflects realistic retrieval difficulty.
-
----
-
-## 🖥️ Configuration Reference
-
-All hyperparameters live in the `CFG` dictionary for easy tuning:
-
-| Parameter | Default | Description |
-|---|---|---|
-| `sample_n` | 15,000 | Max rows to use from dataset |
-| `test_size` | 0.10 | Held-out test fraction |
-| `seed` | 42 | Random seed for reproducibility |
-| `min_q` / `min_a` | 5 / 10 | Min character length filter |
-| `tfidf_q_max` | 20,000 | Max features for question vectorizer |
-| `tfidf_d_max` | 15,000 | Max features for document vectorizer |
-| `ngram` | (1,4) | N-gram range for TF-IDF |
-| `min_df` | 2 | Minimum document frequency |
-| `tfidf_q_w` / `tfidf_d_w` | 0.25 / 0.75 | TF-IDF sub-score weights |
-| `hybrid_t` / `hybrid_b` | 0.50 / 0.50 | TF-IDF vs BERT blend |
-| `bert_name` | `aubmindlab/bert-base-arabertv02` | HuggingFace model ID |
-| `bert_batch` | 128 | Batch size for encoding |
-| `ft_batch` | 16 | Batch size for fine-tuning |
-| `ft_epochs` | 1 | Fine-tuning epochs |
-| `ft_n` | 2,000 | Training pairs for fine-tuning |
-| `warmup` | 0.10 | Warmup ratio |
-| `top_k` | 3 | Results shown per search |
-| `mrr_k` | 10 | K for MRR@K evaluation |
-| `mrr_n` | 500 | Evaluation sample size |
+This makes it easy to tune trade-offs between quality and speed while keeping the HOML-style configuration centralised. [file:1]
 
 ---
 
-## 🚀 How to Run
+## Evaluation — MRR@10
 
-### Prerequisites
-- Google account (for Colab + Drive)
-- Kaggle account + API token (`kaggle.json`)
-- ngrok account + authtoken (free at [ngrok.com](https://ngrok.com))
+The notebook reports baseline and fine-tuned AraBERT MRR@10 on a held-out test split: [file:1]
 
-### Step 1 — Open in Google Colab
-Upload `fatwa_search.ipynb` to [colab.research.google.com](https://colab.research.google.com) and set the runtime to **GPU (T4)**.
+- Index is always built on `df_train`, and evaluation uses `df_test` only (strict anti-leakage). [file:1]  
+- MRR@10 is averaged over a random sample (`mrr_n`) of test examples, with a simple exact-prefix based ground truth. [file:1]  
+- A small bar plot comparing baseline vs fine-tuned MRR is saved to `reports/figures/mrr_<dataset>.png`. [file:1]
 
-### Step 2 — Install Dependencies
-The notebook installs all required packages automatically:
+---
+
+## Tech Stack
+
+| Component       | Tool / Library                                   |
+|----------------|---------------------------------------------------|
+| Language       | Python 3.10 (Google Colab)                        |
+| Data           | `pandas`, `kagglehub`                             |
+| Arabic NLP     | `pyarabic`                                       |
+| Embeddings     | `transformers`, `sentence-transformers`, `torch` |
+| Metrics        | `scikit-learn` cosine similarity, custom MRR     |
+| Plots          | `matplotlib`, `seaborn`                          |
+| Serving (Colab)| `Flask`, `flask-cors`, `pyngrok`                 |
+| Laptop UI      | `Flask`, `requests`                              |
+[file:1]
+
+---
+
+## How to Run
+
+### 1. Open Notebook in Colab
+
+Upload `fatwa_search_Latest.ipynb` to Colab, select a GPU T4 runtime. [file:1]
+
+### 2. Install Dependencies
+
+The notebook includes a cell that installs everything:
+
 ```bash
-pip install kagglehub sentence-transformers scikit-learn pyarabic matplotlib seaborn scipy flask pyngrok flask-cors
+pip install kagglehub sentence-transformers scikit-learn \
+  pyarabic matplotlib seaborn scipy flask pyngrok flask-cors \
+  transformers torch accelerate
 ```
+[file:1]
 
-### Step 3 — Mount Google Drive
+### 3. Mount Google Drive (optional for persistence)
+
 ```python
 from google.colab import drive
 drive.mount('/content/drive')
 ```
+[file:1]
 
-### Step 4 — Run All Cells
-Click **Runtime → Run All**. The notebook will:
-1. Download the dataset from Kaggle
-2. Clean and split the data
-3. Train TF-IDF vectorizers + compute AraBERT embeddings
-4. Evaluate Baseline MRR@10
-5. Fine-tune AraBERT with MNRL
-6. Re-evaluate Fine-Tuned MRR@10
-7. Start Flask API and expose it via ngrok
+### 4. Configure Dataset and CFG
 
-### Step 5 — Connect the Laptop UI
-After Cell B runs, you will see:
-```
+- Set `ACTIVE_DATASET` in the dataset registry cell. [file:1]  
+- Adjust `CFG` parameters (sample size, weights, batches) if needed. [file:1]
+
+### 5. Run All
+
+Use “Runtime → Run all”. The notebook will: [file:1]
+
+1. Download the chosen Kaggle dataset via `kagglehub`.  
+2. Clean Arabic text and build train/test splits.  
+3. Compute DeepSeek and AraBERT embeddings on the training subset.  
+4. Evaluate baseline and fine-tuned MRR@10.  
+5. Plot EDA and MRR bar charts.  
+6. Start a Flask API on Colab and expose it via ngrok.
+
+### 6. Connect Laptop UI
+
+The API cell prints something like: [file:1]
+
+```text
 Colab API live → https://xxxx.ngrok.io
+1. Edit laptop_server.py → COLAB_URL = 'https://xxxx.ngrok.io'
 ```
 
-1. Open the auto-generated `laptop_server.py`
-2. Set `COLAB_URL = "https://xxxx.ngrok.io"`
-3. Run locally:
+On your laptop:
+
 ```bash
 python laptop_server.py
 ```
-4. Open your browser at `http://localhost:8080`
+[file:1]
+
+Then visit:
+
+- `http://localhost:8080` for the Arabic search UI. [file:1]  
+- Type a question like `حكم صلاة الجمعة` and see ranked fatwas with confidence scores. [file:1]
 
 ---
 
-## 🌐 API Reference
+## HOML Influence
 
-The Colab Flask API exposes two endpoints:
-
-### `GET /health`
-Returns device status.
-```json
-{ "status": "ok", "device": "cuda" }
-```
-
-### `POST /ask`
-```json
-{
-  "question": "حكم صلاة الجمعة",
-  "top_k": 3
-}
-```
-Response:
-```json
-{
-  "analysis": { "intent": "حكم صلاة الجمعة" },
-  "results": [
-    {
-      "id": 1,
-      "title": "...",
-      "question": "...",
-      "answer": "...",
-      "confidence": "72.3%",
-      "tfidf": "68.1%",
-      "bert": "76.5%",
-      "_idx": 4821
-    }
-  ]
-}
-```
+The entire notebook is structured to mirror the HOML “end-to-end project” style: data registry, configurable `CFG`, careful data splits, clear evaluation metric, and a simple serving story that goes beyond the notebook into a working UI. [file:1] This makes it a practical case study of Arabic IR using DeepSeek and AraBERT framed in a HOML-inspired workflow. [file:1]
 
 ---
 
-## 🔧 Tech Stack
+## License and Acknowledgements
 
-| Component | Tool |
-|---|---|
-| Language | Python 3.10 |
-| Runtime | Google Colab (GPU T4) |
-| Arabic NLP | `pyarabic`, `aubmindlab/bert-base-arabertv02` |
-| Embeddings | `sentence-transformers` |
-| Sparse Retrieval | `scikit-learn` TF-IDF |
-| Fine-Tuning Loss | MultipleNegativesRankingLoss (MNRL) |
-| API Server | Flask + flask-cors |
-| Tunnel | pyngrok (ngrok) |
-| Data Source | Kaggle (`kagglehub`) |
-| Visualisation | matplotlib, seaborn |
-| Storage | numpy `.npy`, scipy `.npz`, pickle `.pkl` |
-
----
-
-## 📝 Key Design Decisions
-
-**Why TF-IDF + BERT hybrid?**  
-TF-IDF is fast and excellent at exact keyword matching. BERT captures semantic meaning even when words differ. Combining both gives better results than either alone, especially for religious text that mixes classical and modern Arabic.
-
-**Why AraBERT specifically?**  
-`aubmindlab/bert-base-arabertv02` is pre-trained on large Arabic corpora and handles Arabic morphology better than multilingual BERT. It understands Islamic terminology out of the box.
-
-**Why MNRL for fine-tuning?**  
-Multiple Negatives Ranking Loss treats all other answers in the same batch as negatives. This is very data-efficient — you only need `(question, answer)` pairs with no explicit negative labelling, making it ideal for fatwa datasets.
-
-**Why strict train/test split?**  
-The TF-IDF index and BERT embeddings are built **only on `df_train`**. MRR is measured **only on `df_test`**. This prevents data leakage and gives a realistic performance estimate.
-
----
-
-## 🔮 Possible Improvements
-
-- Use a larger fine-tuning sample (currently capped at 2,000 pairs)
-- Try more epochs (currently 1) — limited by Colab free tier
-- Add BM25 as a third retrieval signal
-- Use a dedicated Arabic sentence transformer (e.g., `CAMeL-Lab` models)
-- Add query expansion using Arabic synonyms
-- Build a proper FAISS index for faster dense retrieval on large corpora
-- Add multilingual support for non-Arabic users
-
----
-
-## 📄 License
-
-This project is released under the **MIT License**. Datasets are subject to their respective Kaggle licenses — please review before commercial use.
-
----
-
-## 🙏 Acknowledgements
-
-- [IslamWeb](https://www.islamweb.net) for the original fatwa content
-- [AUBMindLab](https://github.com/aub-mind/arabert) for AraBERT
-- [UKPLab](https://github.com/UKPLab/sentence-transformers) for sentence-transformers
-- Kaggle dataset contributors: `abdallahelsaadany`, `hazemmosalah`, `a5medashraf`
-- Inspired by *Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow* (HOML) end-to-end project structure
+- Code: MIT License (see repository).  
+- Data: Respect original Kaggle dataset licenses. [file:1]  
+- Models: DeepSeek-R1-Distill-Qwen-1.5B and AraBERT from their official providers. [file:1]  
+- Structure and pipeline inspired by “Hands-On Machine Learning with Scikit-Learn, Keras & TensorFlow” (HOML). [file:1]
