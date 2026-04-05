@@ -2,296 +2,242 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Halal Stock AI Analyzer</title>
-<<<<<<< HEAD
 
     <style>
         body {
             background: radial-gradient(circle at top, #0d1117, #020409);
             color: #e6edf3;
             font-family: "Segoe UI", Arial, sans-serif;
-=======
-    <style>
-        body {
-            background: #0d1117;
-            color: #e6edf3;
-            font-family: Arial, sans-serif;
->>>>>>> ac81be44a1a42f92e104a3a72a4f72d908e48d58
             text-align: center;
-            padding: 40px;
+            padding: 20px;
+            margin: 0;
         }
 
-<<<<<<< HEAD
-        h1 {
-            margin-bottom: 30px;
-        }
+        h1 { margin-bottom: 30px; font-weight: 300; letter-spacing: 1px; }
 
         .card {
             background: #161b22;
             padding: 30px;
             border-radius: 18px;
-            width: 550px;
+            width: 100%;
+            max-width: 700px; /* ขยายกว้างขึ้นเล็กน้อยเพื่อให้ตารางดูง่าย */
             margin: auto;
             box-shadow: 0 0 30px rgba(0,255,200,0.08);
-=======
-        .card {
-            background: #161b22;
-            padding: 30px;
-            border-radius: 15px;
-            width: 500px;
-            margin: auto;
-            box-shadow: 0 0 25px rgba(0,255,200,0.1);
->>>>>>> ac81be44a1a42f92e104a3a72a4f72d908e48d58
+            border: 1px solid #30363d;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
         }
 
         input {
+            flex: 1;
             padding: 12px;
-            width: 70%;
-<<<<<<< HEAD
             border-radius: 10px;
-=======
-            border-radius: 8px;
->>>>>>> ac81be44a1a42f92e104a3a72a4f72d908e48d58
-            border: none;
+            border: 1px solid #30363d;
             background: #0d1117;
             color: white;
-            margin-right: 10px;
+            outline: none;
         }
 
+        input:focus { border-color: #00ffc3; }
+
         button {
-            padding: 12px 20px;
-<<<<<<< HEAD
+            padding: 12px 25px;
             background: linear-gradient(90deg, #00ffc3, #00ffa2);
             border: none;
             border-radius: 10px;
-=======
-            background: #00ffc3;
-            border: none;
-            border-radius: 8px;
->>>>>>> ac81be44a1a42f92e104a3a72a4f72d908e48d58
             font-weight: bold;
+            color: #0d1117;
             cursor: pointer;
+            transition: transform 0.2s;
         }
 
-        .halal {
-            color: #00ff9c;
-            font-size: 24px;
-            font-weight: bold;
-        }
+        button:hover { transform: scale(1.05); opacity: 0.9; }
 
-        .haram {
-            color: #ff4d4d;
-            font-size: 24px;
-            font-weight: bold;
-        }
+        /* Status Colors */
+        .halal { color: #00ff9c; font-size: 28px; font-weight: bold; }
+        .haram { color: #ff4d4d; font-size: 28px; font-weight: bold; }
 
-        .bar {
+        /* Progress Bar */
+        .bar-container {
             background: #222;
-            border-radius: 10px;
-            overflow: hidden;
+            border-radius: 20px;
+            height: 12px;
+            width: 100%;
             margin: 15px 0;
+            overflow: hidden;
         }
 
-<<<<<<< HEAD
-        .bar-fill-halal {
-            height: 20px;
-            background: linear-gradient(90deg, #00ff9c, #00ffc3);
+        .bar-fill {
+            height: 100%;
+            transition: width 1s ease-in-out;
         }
-
-        .bar-fill-haram {
-            height: 20px;
-            background: linear-gradient(90deg, #ff4d4d, #ff0000);
-        }
+        .bg-halal { background: linear-gradient(90deg, #00ff9c, #00ffc3); }
+        .bg-haram { background: linear-gradient(90deg, #ff4d4d, #ff0000); }
 
         .reasons {
             text-align: left;
-            margin-top: 20px;
+            margin-top: 25px;
+            padding: 15px;
+            background: #0d1117;
+            border-radius: 12px;
+            border: 1px dotted #30363d;
         }
 
-        .passed {
-            color: #00ff9c;
-        }
-
-        .failed {
-            color: #ff4d4d;
-        }
+        .reasons ul { padding-left: 20px; margin: 10px 0; }
+        .reasons li { margin-bottom: 8px; font-size: 14px; color: #c9d1d9; }
 
         .error {
+            background: rgba(255, 77, 77, 0.1);
             color: #ff4d4d;
-            margin-top: 15px;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ff4d4d;
+        }
+
+        /* Table Style */
+        .table-container {
+            margin-top: 20px;
+            overflow-x: auto;
+            background: #0d1117;
+            border-radius: 12px;
+            padding: 10px;
         }
 
         table {
             width: 100%;
-            margin-top: 20px;
             border-collapse: collapse;
             font-size: 13px;
         }
 
         th, td {
-            padding: 8px;
-            border-bottom: 1px solid #333;
+            padding: 12px 8px;
+            border-bottom: 1px solid #30363d;
+            text-align: center;
         }
 
-        th {
-            background: #222;
-        }
+        th { background: #0d1117; color: #8b949e; font-weight: 500; }
+        .halal-text { color: #00ff9c; font-weight: bold; }
+        .haram-text { color: #ff4d4d; font-weight: bold; }
 
-        .halal-text { color: #00ff9c; }
-        .haram-text { color: #ff4d4d; }
-        .doubt-text { color: #ffaa00; }
+        h4 { color: #8b949e; margin-bottom: 10px; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; }
 
-        hr {
-            border: 0;
-            height: 1px;
-            background: #222;
-            margin: 20px 0;
-=======
-        .bar-fill {
-            height: 20px;
-            background: #00ffc3;
-        }
-
-        ul {
-            text-align: left;
->>>>>>> ac81be44a1a42f92e104a3a72a4f72d908e48d58
-        }
+        hr { border: 0; height: 1px; background: #30363d; margin: 30px 0; }
     </style>
 </head>
 <body>
 
-<<<<<<< HEAD
 <h1>🧠 Halal Stock AI Analyzer</h1>
 
 <div class="card">
-
-    <!-- FORM -->
-    <form method="POST">
-        <input type="text" name="ticker" placeholder="Enter ticker e.g. AAPL" required>
+    <form method="POST" class="input-group">
+        <input type="text" name="ticker" placeholder="Enter stock ticker (e.g. MSFT, BABA)" required>
         <button type="submit">Analyze</button>
     </form>
 
-    <!-- ERROR -->
     {% if error %}
-        <div class="error">{{ error }}</div>
+        <div class="error">⚠️ {{ error }}</div>
     {% endif %}
 
-    <!-- RESULT -->
     {% if result %}
         <hr>
-
-        <h2>{{ result.ticker }}</h2>
-        <p>Sector: {{ result.sector }}</p>
+        <div style="margin-bottom: 10px; color: #8b949e; font-size: 14px;">ANALYSIS RESULT</div>
+        <h2 style="margin: 0; font-size: 32px;">{{ result.ticker }}</h2>
+        <p style="color: #8b949e;">Sector: {{ result.sector }}</p>
 
         {% if result.status == "HALAL" %}
             <div class="halal">HALAL ✅</div>
-            <div class="bar">
-                <div class="bar-fill-halal" style="width: {{ result.confidence }}%"></div>
+            <div class="bar-container">
+                <div class="bar-fill bg-halal" style="width: {{ result.confidence }}%"></div>
             </div>
         {% else %}
             <div class="haram">HARAM ❌</div>
-            <div class="bar">
-                <div class="bar-fill-haram" style="width: {{ result.confidence }}%"></div>
+            <div class="bar-container">
+                <div class="bar-fill bg-haram" style="width: {{ result.confidence }}%"></div>
             </div>
         {% endif %}
 
-        <p>AI Confidence: {{ result.confidence }}%</p>
+        <p style="font-size: 14px;">Overall Confidence: <strong>{{ result.confidence }}%</strong></p>
 
-        <!-- REASONS -->
         <div class="reasons">
-
-            {% if result.failed_reasons %}
-                <h3 class="failed">❌ Failed</h3>
-                <ul>
-                    {% for r in result.failed_reasons %}
-                        <li class="failed">{{ r }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-
-            {% if result.passed_reasons %}
-                <h3 class="passed">✅ Passed</h3>
-                <ul>
-                    {% for r in result.passed_reasons %}
-                        <li class="passed">{{ r }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-
-        </div>
-    {% endif %}
-
-    <!-- DATASET TABLE -->
-    {% if dataset %}
-        <hr>
-        <h3>📊 Stock Dataset</h3>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Interest</th>
-                    <th>Debt</th>
-                    <th>Non-Halal</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for s in dataset %}
-                <tr>
-                    <td>{{ s.stock_name }}</td>
-                    <td>{{ s.interest_ratio }}</td>
-                    <td>{{ s.debt_ratio }}</td>
-                    <td>{{ s.non_halal_ratio }}</td>
-
-                    {% if s.label == "Halal" %}
-                        <td class="halal-text">Halal</td>
-                    {% elif s.label == "Haram" %}
-                        <td class="haram-text">Haram</td>
-                    {% else %}
-                        <td class="doubt-text">Doubtful</td>
-                    {% endif %}
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% endif %}
-
-</div>
-=======
-    <h1>🧠 Halal Stock AI Analyzer</h1>
-
-    <div class="card">
-        <form method="POST">
-            <input type="text" name="ticker" placeholder="Enter ticker e.g. AAPL" required>
-            <button type="submit">Analyze</button>
-        </form>
-
-        {% if result %}
-            <h2>{{ result.ticker }}</h2>
-            <p>Sector: {{ result.sector }}</p>
-
-            {% if result.status == "HALAL" %}
-                <div class="halal">HALAL ✅</div>
-            {% else %}
-                <div class="haram">HARAM ❌</div>
-            {% endif %}
-
-            <p>AI Confidence: {{ result.confidence }}%</p>
-
-            <div class="bar">
-                <div class="bar-fill" style="width: {{ result.confidence|default(0) }}%;"></div>
-            </div>
-
-            <h3>Reasons:</h3>
+            <h4>🔍 Analysis Details</h4>
             <ul>
-                {% for r in result.reasons %}
-                    <li>{{ r }}</li>
+                {% for reason in result.reasons %}
+                    <li>{{ reason }}</li>
                 {% endfor %}
             </ul>
+        </div>
+
+        {% if result.ai_list %}
+        <div style="margin-top: 25px;">
+            <h4 style="text-align: left;">🤖 Multi-Model Consensus</h4>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="text-align: left;">Algorithm</th>
+                            <th>Prediction</th>
+                            <th>Probability</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ai in result.ai_list %}
+                        <tr>
+                            <td style="text-align: left; color: #e6edf3;">{{ ai.name }}</td>
+                            <td class="{{ 'halal-text' if ai.status == 'HALAL' else 'haram-text' }}">
+                                {{ ai.status }}
+                            </td>
+                            <td>{{ ai.confidence }}%</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
         {% endif %}
-    </div>
->>>>>>> ac81be44a1a42f92e104a3a72a4f72d908e48d58
+    {% endif %}
+
+    {% if dataset %}
+        <hr>
+        <h4 style="text-align: left;">📊 Historical Reference Data</h4>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Symbol</th>
+                        <th>Interest</th>
+                        <th>Debt</th>
+                        <th>Non-Halal</th>
+                        <th>Label</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for s in dataset[:10] %} <tr>
+                        <td><strong>{{ s.stock_name }}</strong></td>
+                        <td>{{ s.interest_ratio }}</td>
+                        <td>{{ s.debt_ratio }}</td>
+                        <td>{{ s.non_halal_ratio }}</td>
+                        <td class="{{ 'halal-text' if s.label == 'Halal' else 'haram-text' }}">
+                            {{ s.label }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+</div>
+
+<p style="margin-top: 20px; font-size: 11px; color: #484f58; line-height: 1.5;">
+    Note: The final status is determined by a combination of Shariah rules and AI consensus.<br>
+    © 2026 AI Shariah Compliance Engine. All Rights Reserved.
+</p>
 
 </body>
 </html>
