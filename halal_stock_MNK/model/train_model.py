@@ -1,25 +1,35 @@
 import pandas as pd
-from sklearn.ensemble import RandomForestClassifier
 import joblib
 import os
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.svm import SVC
+from sklearn.linear_model import LogisticRegression
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.naive_bayes import GaussianNB
 
-# โหลดข้อมูล training
-df = pd.read_csv("data/training_data.csv")
+# 1. โหลดข้อมูลใหม่ 200 ข้อที่คุณเพิ่งแก้ใน CSV
+df = pd.read_csv('data/stock_dataset.csv')
 
-# features
-X = df[["interest_ratio", "debt_ratio", "non_halal_ratio"]]
+# 2. เตรียมข้อมูล (X คือตัวเลข Ratios, y คือคำตอบ Halal/Haram)
+X = df[['interest_ratio', 'debt_ratio', 'non_halal_ratio']]
+y = df['label'].apply(lambda x: 1 if x == 'Halal' else 0)
 
-# label
-y = df["label"]
+# รายชื่อโมเดลที่ต้องสร้างใหม่
+models = {
+    "randomforest": RandomForestClassifier(n_estimators=100, random_state=42),
+    "svm": SVC(probability=True, random_state=42),
+    "logisticregression": LogisticRegression(),
+    "knn": KNeighborsClassifier(n_neighbors=5),
+    "naivebayes": GaussianNB()
+}
 
-# สร้างโมเดล
-model = RandomForestClassifier(n_estimators=100)
-model.fit(X, y)
+# 3. วนลูปเทรนและเซฟทับไฟล์เก่าในโฟลเดอร์ model
+if not os.path.exists('model'):
+    os.makedirs('model')
 
-# สร้างโฟลเดอร์ model ถ้ายังไม่มี
-os.makedirs("model", exist_ok=True)
+for name, clf in models.items():
+    clf.fit(X, y)
+    joblib.dump(clf, f'model/{name}_model.pkl')
+    print(f"✅ Trained and Updated: {name}_model.pkl")
 
-# บันทึกโมเดล
-joblib.dump(model, "model/halal_model.pkl")
-
-print("✅ เทรนโมเดลเสร็จแล้ว")
+print("\n🚀 AI 'Learing' complete! ตอนนี้ AI จำเกณฑ์ใหม่เรียบร้อยแล้วครับ")
